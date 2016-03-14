@@ -1,0 +1,25 @@
+﻿@model ToDoList.Domain.Entities.User
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/flatly/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        @using (Html.BeginForm("Login", "Account", FormMethod.Post)) {
+            <h3>Username</h3> @Html.TextBoxFor(x => @Model.Username)
+            <h3>Password</h3> @Html.TextBoxFor(x => (@Model.Password), new {@type="password"})
+            <input class="btn btn-primary" type="submit" name="Subbmit" value="Log In"/>
+        }
+
+        @Html.ActionLink("Register", "Register", "Account") @*new { @class="btn btn-default" }*@
+    </div>
+</body>
+</html>

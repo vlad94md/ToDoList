@@ -1,0 +1,119 @@
+﻿@{
+    Layout = null;
+    var currUser = (string)Session["username"];
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>To Do App</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/flatly/bootstrap.min.css" rel="stylesheet">
+    <script type="text/javascript" src="~/Scripts/jquery-1.8.3.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+    <style>
+        #toDoHeader {
+            margin: 0 auto;
+            width: 70%;
+            text-align: center;
+        }
+
+         #toDoList {
+             margin: 0 auto;
+             width: 70%;
+         }
+
+         #toDoLabel {
+             font-size: 20px;
+         }
+
+         #toDoRecordButton {
+             
+         }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Welcome, @currUser</a>
+    </div>
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+      <ul class="nav navbar-nav navbar-right">
+        <li>@Html.ActionLink("Logout", "Logout", "Account", null, new {@class = "pull-left"})</li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <div id="toDoContainer">
+        <div id="toDoHeader">
+                <label id="toDoLabel">To Do:</label>
+                <input type="text" id="toDoInput"/>
+                <button class="btn btn-primary" onclick="AddToDo()"> Add a ToDo</button>
+        </div>
+        <div id="toDoList" onclick="LoadYourToDos()"></div>
+    </div>
+</div>
+    <script>
+        function LoadYourToDos() {
+            $.ajax({
+                url: '@Url.Action("MyRecords", "ToDo")',
+                success: function (data) {
+                    $('#toDoList').html(data);
+                }
+            });
+        }
+
+        function AddToDo() {
+            var toDoText = $("#toDoInput").val();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("Add", "ToDo")',
+                data: { subject: toDoText },
+                success: function (data) {
+                    $('#toDoList').html(data);
+                }
+            });
+        }
+
+        function DeleteToDo(toDoId) {
+            $.ajax({
+                url: '@Url.Action("Delete", "ToDo")',
+                    data: { id: toDoId },
+                    success: function (data) {
+                        $('#toDoList').html(data);
+                    }
+                });
+            }
+
+        function DoneToDo(toDoId) {
+            $.ajax({
+
+                url: '@Url.Action("Done", "ToDo")',
+                data: { id: toDoId },
+                success: function (data) {
+                    $('#toDoList').html(data);
+                }
+            });
+        }
+
+            $(function () {
+                LoadYourToDos();
+            });
+
+    </script>
+
+</body>
+</html>

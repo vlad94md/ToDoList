@@ -1,0 +1,26 @@
+﻿@model List<ToDoList.Domain.Entities.ToDoRecord>
+
+<br/>
+@foreach (var record in @Model)
+{
+    if (record.IsComplete)
+    {
+    <div class="panel panel-success">
+        <div class="panel-body">
+            @record.Subject
+            <button class="btn btn-primary pull-right" id="@record.Id" onclick="DeleteToDo(this.id)">Delete</button>
+        </div>
+    </div>
+    }
+    else
+    {
+    <div class="panel panel-default">
+        <div class="panel-body">
+            @record.Subject
+            <button class="btn btn-primary pull-right" id="@record.Id" onclick="DeleteToDo(this.id)">Delete</button>
+            <button class="btn btn-success pull-right" id="@record.Id" onclick="DoneToDo(this.id)">Done</button>
+        </div>
+    </div>
+
+    }
+}
