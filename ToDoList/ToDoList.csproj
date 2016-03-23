@@ -146,7 +146,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Views\Web.config" />
-    <Content Include="Views\ToDo\Records.cshtml" />
+    <Content Include="Views\ToDo\Shared\Records.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

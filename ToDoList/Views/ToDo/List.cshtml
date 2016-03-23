@@ -10,9 +10,9 @@
     <meta name="viewport" content="width=device-width" />
     <title>To Do App</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/flatly/bootstrap.min.css" rel="stylesheet">
-    <script type="text/javascript" src="~/Scripts/jquery-1.8.3.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.2.min.js"></script>
     <script type="text/javascript" src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
     <style>
         #toDoHeader {
@@ -21,63 +21,104 @@
             text-align: center;
         }
 
-         #toDoList {
-             margin: 0 auto;
-             width: 70%;
-         }
+        #toDoList {
+            margin: 0 auto;
+            width: 70%;
+        }
 
-         #toDoLabel {
-             font-size: 20px;
-         }
+        #toDoListOnlyDone {
+            margin: 0 auto;
+            width: 70%;
+        }
 
-         #toDoRecordButton {
-             
-         }
+        #toDoListNotFinished {
+            margin: 0 auto;
+            width: 70%;
+        }
+
+        #toDoLabel {
+            font-size: 20px;
+        }
     </style>
 </head>
 <body>
-<div class="container">
+    <div class="container">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Welcome, @currUser</a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>@Html.ActionLink("Logout", "Logout", "Account", null, new { @class = "pull-left" })</li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
 
-    <nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">Welcome, @currUser</a>
-    </div>
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
-      <ul class="nav navbar-nav navbar-right">
-        <li>@Html.ActionLink("Logout", "Logout", "Account", null, new {@class = "pull-left"})</li>
-      </ul>
-    </div>
-  </div>
-</nav>
-
-    <div id="toDoContainer">
-        <div id="toDoHeader">
+        <div id="toDoContainer">
+            <div id="toDoHeader">
                 <label id="toDoLabel">To Do:</label>
-                <input type="text" id="toDoInput"/>
-                <button class="btn btn-primary" onclick="AddToDo()"> Add a ToDo</button>
+                <input type="text" id="toDoInput" />
+                <button class="btn btn-primary" onclick="AddToDo()">Add a ToDo</button>
+            </div>
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#all" data-toggle="tab" aria-expanded="true" onclick="LoadAllToDos()">All</a></li>
+                <li class=""><a href="#tasks" data-toggle="tab" aria-expanded="false" onclick="LoadNotFinishedToDos()">ToDo</a></li>
+                <li class=""><a href="#done" data-toggle="tab" aria-expanded="false" onclick="LoadDoneToDos()">Done</a></li>
+            </ul>
+            <div id="myTabContent" class="tab-content">
+                <div class="tab-pane fade active in" id="all">
+                    <div id="toDoList"></div>
+                </div>
+                <div class="tab-pane fade" id="tasks">
+                    <div id="toDoListNotFinished"></div>
+                </div>
+                <div class="tab-pane fade" id="done">
+                    <div id="toDoListOnlyDone"></div>
+                </div>
+            </div>
         </div>
-        <div id="toDoList" onclick="LoadYourToDos()"></div>
+
     </div>
-</div>
     <script>
-        function LoadYourToDos() {
+        function LoadAllToDos() {
             $.ajax({
-                url: '@Url.Action("MyRecords", "ToDo")',
+                url: '@Url.Action("GetAllRecords", "ToDo")',
                 success: function (data) {
                     $('#toDoList').html(data);
                 }
             });
         }
 
+        function LoadNotFinishedToDos() {
+            $.ajax({
+                url: '@Url.Action("GetNotFinishedRecords", "ToDo")',
+                success: function (data) {
+                    $('#toDoListNotFinished').html(data);
+                }
+            });
+        }
+
+        function LoadDoneToDos() {
+            $.ajax({
+                url: '@Url.Action("GetOnlyDoneRecords", "ToDo")',
+                success: function (data) {
+                    $('#toDoListOnlyDone').html(data);
+                }
+            });
+        }
+
         function AddToDo() {
             var toDoText = $("#toDoInput").val();
+            $("#toDoInput").val("");
+
             $.ajax({
                 type: "POST",
                 url: '@Url.Action("Add", "ToDo")',
@@ -91,12 +132,12 @@
         function DeleteToDo(toDoId) {
             $.ajax({
                 url: '@Url.Action("Delete", "ToDo")',
-                    data: { id: toDoId },
-                    success: function (data) {
-                        $('#toDoList').html(data);
-                    }
-                });
-            }
+                data: { id: toDoId },
+                success: function (data) {
+                    $('#toDoList').html(data);
+                }
+            });
+        }
 
         function DoneToDo(toDoId) {
             $.ajax({
@@ -109,9 +150,13 @@
             });
         }
 
-            $(function () {
-                LoadYourToDos();
-            });
+        function checkWhatTabIsAcive() {
+            
+        }
+
+        $(function () {
+            LoadAllToDos();
+        });
 
     </script>
 

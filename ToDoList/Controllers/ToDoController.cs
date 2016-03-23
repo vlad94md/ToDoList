@@ -40,15 +40,31 @@ namespace ToDoList.Controllers
 
             var userRecords = repository.Records.Where(x => x.Author == record.Author).OrderByDescending(x => x.CreatedOn).ToList();
 
-            return PartialView("Records", userRecords);
+            return PartialView("Shared/Records", userRecords);
         }
 
-        public ActionResult MyRecords()
+        public ActionResult GetAllRecords()
         {
             string currUser = (string) Session["username"];
             var userRecords = repository.Records.Where(x => x.Author == currUser).OrderByDescending(x => x.CreatedOn).ToList();
 
-            return PartialView("Records", userRecords);
+            return PartialView("Shared/Records", userRecords);
+        }
+
+        public ActionResult GetNotFinishedRecords()
+        {
+            string currUser = (string)Session["username"];
+            var userRecords = repository.Records.Where(x => x.Author == currUser && !x.IsComplete).OrderByDescending(x => x.CreatedOn).ToList();
+
+            return PartialView("Shared/Records", userRecords);
+        }
+
+        public ActionResult GetOnlyDoneRecords()
+        {
+            string currUser = (string)Session["username"];
+            var userRecords = repository.Records.Where(x => x.Author == currUser && x.IsComplete).OrderByDescending(x => x.CreatedOn).ToList();
+
+            return PartialView("Shared/Records", userRecords);
         }
 
         public ActionResult Delete(string id)
@@ -57,7 +73,7 @@ namespace ToDoList.Controllers
             string currUser = (string)Session["username"];
             var userRecords = repository.Records.Where(x => x.Author == currUser).OrderByDescending(x=>x.CreatedOn).ToList();
 
-            return PartialView("Records", userRecords);
+            return PartialView("Shared/Records", userRecords);
         }
 
         public ActionResult Done(string id)
@@ -66,7 +82,7 @@ namespace ToDoList.Controllers
             string currUser = (string)Session["username"];
             var userRecords = repository.Records.Where(x => x.Author == currUser).OrderByDescending(x => x.CreatedOn).ToList();
 
-            return PartialView("Records", userRecords);
+            return PartialView("Shared/Records", userRecords);
         }
 
     }
