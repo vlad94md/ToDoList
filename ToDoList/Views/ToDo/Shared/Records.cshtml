@@ -7,8 +7,8 @@
     {
     <div class="panel panel-success">
         <div class="panel-body">
-            @record.Subject
-            <button class="btn btn-primary pull-right" id="@record.Id" onclick="DeleteToDo(this.id)">Delete</button>
+            <p>@record.Subject</p>
+            <button class="btn btn-primary pull-right smallButton" id="@record.Id" onclick="DeleteToDo(this.id)">Delete</button>
         </div>
     </div>
     }
@@ -16,9 +16,9 @@
     {
     <div class="panel panel-default">
         <div class="panel-body">
-            @record.Subject
-            <button class="btn btn-primary pull-right" id="@record.Id" onclick="DeleteToDo(this.id)">Delete</button>
-            <button class="btn btn-success pull-right" id="@record.Id" onclick="DoneToDo(this.id)">Done</button>
+            <p>@record.Subject</p>
+            <button class="btn btn-primary pull-right smallButton" id="@record.Id" onclick="DeleteToDo(this.id)">Delete</button>
+            <button class="btn btn-success pull-right smallButton" id="@record.Id" onclick="DoneToDo(this.id)">Done</button>
         </div>
     </div>
 

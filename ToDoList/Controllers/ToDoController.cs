@@ -14,13 +14,7 @@ namespace ToDoList.Controllers
 
         public ActionResult List()
         {
-            string helloString = String.Empty;
-
-            if (Session["username"] != null)
-            {
-                helloString = (string)Session["username"];
-            }
-            else
+            if (Session["username"] == null)
             {
                 return RedirectToAction("Login", "Account");
             }
@@ -29,18 +23,15 @@ namespace ToDoList.Controllers
         }
 
         [HttpPost]
-        public ActionResult Add(string subject)
+        public void Add(string subject)
         {
             ToDoRecord record = new ToDoRecord();
             record.Subject = subject;
             record.IsComplete = false;
             record.Author = (string) Session["username"];
             record.CreatedOn = DateTime.Now;
+
             repository.AddRecord(record);
-
-            var userRecords = repository.Records.Where(x => x.Author == record.Author).OrderByDescending(x => x.CreatedOn).ToList();
-
-            return PartialView("Shared/Records", userRecords);
         }
 
         public ActionResult GetAllRecords()

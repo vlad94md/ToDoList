@@ -21,23 +21,29 @@
             text-align: center;
         }
 
-        #toDoList {
-            margin: 0 auto;
-            width: 70%;
-        }
-
-        #toDoListOnlyDone {
-            margin: 0 auto;
-            width: 70%;
-        }
-
-        #toDoListNotFinished {
-            margin: 0 auto;
-            width: 70%;
-        }
-
         #toDoLabel {
             font-size: 20px;
+        }
+
+        .toDoTabs {
+            margin: 0 auto;
+            width: 70%;
+        }
+
+        .toDosContainer {
+            margin: 0 auto;
+            width: 70%;
+            white-space: normal !important;
+            word-wrap: break-word;
+        }
+
+            .toDosContainer p {
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+        .smallButton {
+            margin: 3px;
         }
     </style>
 </head>
@@ -66,51 +72,63 @@
             <div id="toDoHeader">
                 <label id="toDoLabel">To Do:</label>
                 <input type="text" id="toDoInput" />
-                <button class="btn btn-primary" onclick="AddToDo()">Add a ToDo</button>
+                <button class="btn btn-primary smallButton" onclick="AddToDo()">Add a ToDo</button>
             </div>
-            <ul class="nav nav-tabs">
-                <li class="active"><a href="#all" data-toggle="tab" aria-expanded="true" onclick="LoadAllToDos()">All</a></li>
-                <li class=""><a href="#tasks" data-toggle="tab" aria-expanded="false" onclick="LoadNotFinishedToDos()">ToDo</a></li>
-                <li class=""><a href="#done" data-toggle="tab" aria-expanded="false" onclick="LoadDoneToDos()">Done</a></li>
+            <ul class="nav nav-tabs toDoTabs">
+                <li class="active"><a href="#todoAll" data-toggle="tab" aria-expanded="true" onclick="LoadAllToDos()">All</a></li>
+                <li class=""><a href="#todoOnly" data-toggle="tab" aria-expanded="false" onclick="LoadOnlyToDos()">ToDo</a></li>
+                <li class=""><a href="#doneOnly" data-toggle="tab" aria-expanded="false" onclick="LoadDoneToDos()">Done</a></li>
             </ul>
             <div id="myTabContent" class="tab-content">
-                <div class="tab-pane fade active in" id="all">
-                    <div id="toDoList"></div>
+                <div class="tab-pane fade active in" id="todoAll">
+                    <div id="toDoAllList" class="toDosContainer"></div>
                 </div>
-                <div class="tab-pane fade" id="tasks">
-                    <div id="toDoListNotFinished"></div>
+                <div class="tab-pane fade" id="todoOnly">
+                    <div id="toDoOnlyList" class="toDosContainer"></div>
                 </div>
-                <div class="tab-pane fade" id="done">
-                    <div id="toDoListOnlyDone"></div>
+                <div class="tab-pane fade" id="doneOnly">
+                    <div id="doneOnlyList" class="toDosContainer"></div>
                 </div>
             </div>
         </div>
-
     </div>
     <script>
+        $(function () {
+            LoadAllToDos();
+        });
+
         function LoadAllToDos() {
+            $('#myTabContent').find("div").removeClass("activeTab");
+            $('#toDoAllList').addClass("activeTab");
+
             $.ajax({
                 url: '@Url.Action("GetAllRecords", "ToDo")',
                 success: function (data) {
-                    $('#toDoList').html(data);
+                    $('.activeTab').html(data);
                 }
             });
         }
 
-        function LoadNotFinishedToDos() {
+        function LoadOnlyToDos() {
+            $('#myTabContent').find("div").removeClass("activeTab");
+            $('#toDoOnlyList').addClass("activeTab");
+
             $.ajax({
                 url: '@Url.Action("GetNotFinishedRecords", "ToDo")',
                 success: function (data) {
-                    $('#toDoListNotFinished').html(data);
+                    $('.activeTab').html(data);
                 }
             });
         }
 
         function LoadDoneToDos() {
+            $('#myTabContent').find("div").removeClass("activeTab");
+            $('#doneOnlyList').addClass("activeTab");
+
             $.ajax({
                 url: '@Url.Action("GetOnlyDoneRecords", "ToDo")',
                 success: function (data) {
-                    $('#toDoListOnlyDone').html(data);
+                    $('.activeTab').html(data);
                 }
             });
         }
@@ -124,7 +142,7 @@
                 url: '@Url.Action("Add", "ToDo")',
                 data: { subject: toDoText },
                 success: function (data) {
-                    $('#toDoList').html(data);
+                    refreshActiveTab();
                 }
             });
         }
@@ -134,31 +152,51 @@
                 url: '@Url.Action("Delete", "ToDo")',
                 data: { id: toDoId },
                 success: function (data) {
-                    $('#toDoList').html(data);
+                    refreshActiveTab();
                 }
             });
         }
 
         function DoneToDo(toDoId) {
             $.ajax({
-
                 url: '@Url.Action("Done", "ToDo")',
                 data: { id: toDoId },
                 success: function (data) {
-                    $('#toDoList').html(data);
+                    refreshActiveTab();
                 }
             });
         }
 
-        function checkWhatTabIsAcive() {
-            
+        function refreshActiveTab(data) {
+            var currentTab = $('.activeTab');
+
+            if (currentTab.attr('id') === 'toDoAllList') {
+                $.ajax({
+                    url: '@Url.Action("GetAllRecords", "ToDo")',
+                    success: function (data) {
+                        $('.activeTab').html(data);
+                    }
+                });
+            }
+            else
+                if (currentTab.attr('id') === 'toDoOnlyList') {
+                    $.ajax({
+                        url: '@Url.Action("GetNotFinishedRecords", "ToDo")',
+                        success: function (data) {
+                            $('.activeTab').html(data);
+                        }
+                    });
+                }
+                else
+                    if (currentTab.attr('id') === 'doneOnlyList') {
+                        $.ajax({
+                            url: '@Url.Action("GetOnlyDoneRecords", "ToDo")',
+                            success: function (data) {
+                                $('.activeTab').html(data);
+                            }
+                        });
+                    }
         }
-
-        $(function () {
-            LoadAllToDos();
-        });
-
     </script>
-
 </body>
 </html>
