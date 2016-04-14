@@ -17,50 +17,79 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <script src="~/Scripts/List.js"></script>
 
+    <style>
+        /*Styles only for fixed botton footer*/
+        html, body {
+            height: 100%;
+        }
+
+        #wrap {
+            min-height: 100%;
+            height: auto !important;
+            height: 100%;
+            margin: 0 auto -60px;
+        }
+
+        #push,
+        #footer {
+            height: 60px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <nav class="navbar navbar-default">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="#">Welcome, @userModel.FirstName @userModel.LastName</a>
+    <div id="wrap">
+        <div class="container">
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="#">Welcome, @userModel.FirstName @userModel.LastName</a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>@Html.ActionLink("Logout", "Logout", "Account", null, new { @class = "pull-left" })</li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
-                    <ul class="nav navbar-nav navbar-right">
-                        <li>@Html.ActionLink("Logout", "Logout", "Account", null, new { @class = "pull-left" })</li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+            </nav>
 
-        <div id="toDoContainer">
-            <div id="toDoHeader">
-                <label id="toDoLabel">To Do:</label>
-                <input type="text" id="toDoInput" />
-                <button class="btn btn-primary smallButton" onclick="AddToDo()">Add a ToDo</button>
+            <div id="toDoContainer">
+                <div id="toDoHeader">
+                    <label id="toDoLabel">To Do:</label>
+                    <input type="text" id="toDoInput" />
+                    <button class="btn btn-primary smallButton" onclick="AddToDo()">Add a ToDo</button>
+                </div>
+                <ul class="nav nav-tabs toDoTabs">
+                    <li class="active"><a href="#todoAll" data-toggle="tab" aria-expanded="true" onclick="LoadAllToDos()">All</a></li>
+                    <li class=""><a href="#todoOnly" data-toggle="tab" aria-expanded="false" onclick="LoadOnlyToDos()">ToDo</a></li>
+                    <li class=""><a href="#doneOnly" data-toggle="tab" aria-expanded="false" onclick="LoadDoneToDos()">Done</a></li>
+                </ul>
+                <div id="myTabContent" class="tab-content">
+                    <div class="tab-pane fade active in" id="todoAll">
+                        <div id="toDoAllList" class="toDosContainer"></div>
+                    </div>
+                    <div class="tab-pane fade" id="todoOnly">
+                        <div id="toDoOnlyList" class="toDosContainer"></div>
+                    </div>
+                    <div class="tab-pane fade" id="doneOnly">
+                        <div id="doneOnlyList" class="toDosContainer"></div>
+                    </div>
+                </div>
             </div>
-            <ul class="nav nav-tabs toDoTabs">
-                <li class="active"><a href="#todoAll" data-toggle="tab" aria-expanded="true" onclick="LoadAllToDos()">All</a></li>
-                <li class=""><a href="#todoOnly" data-toggle="tab" aria-expanded="false" onclick="LoadOnlyToDos()">ToDo</a></li>
-                <li class=""><a href="#doneOnly" data-toggle="tab" aria-expanded="false" onclick="LoadDoneToDos()">Done</a></li>
-            </ul>
-            <div id="myTabContent" class="tab-content">
-                <div class="tab-pane fade active in" id="todoAll">
-                    <div id="toDoAllList" class="toDosContainer"></div>
-                </div>
-                <div class="tab-pane fade" id="todoOnly">
-                    <div id="toDoOnlyList" class="toDosContainer"></div>
-                </div>
-                <div class="tab-pane fade" id="doneOnly">
-                    <div id="doneOnlyList" class="toDosContainer"></div>
-                </div>
-            </div>
+        </div>
+        <div id="push"></div>
+    </div>
+
+    <div id="footer">
+        <div class="container">
+            <p class="muted credit">
+                Website made by Vladislav Guleaev
+            </p>
         </div>
     </div>
 

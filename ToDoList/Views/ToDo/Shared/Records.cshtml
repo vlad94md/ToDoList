@@ -1,14 +1,23 @@
-﻿@model List<ToDoList.Domain.Entities.ToDoRecord>
+﻿@model ToDoList.Models.RecordsViewModel
+@{
+    int previousPage = Model.CurrentPage - 1;
+    int nextPage = Model.CurrentPage + 1; 
+}
 
 <br/>
-@foreach (var record in @Model)
+@if (@Model.Records.Count == 0)
+{
+    <p>No records found.</p>
+}
+
+@foreach (var record in @Model.Records)
 {
     if (record.IsComplete)
     {
     <div class="panel panel-success">
         <div class="panel-body">
             <p>@record.Subject</p>
-            <button class="btn btn-primary pull-right smallButton" id="@record.Id" onclick="DeleteToDo(this.id)">Delete</button>
+            <button class="btn btn-primary btn-sm pull-right smallButton" id="@record.Id" onclick="DeleteToDo(this.id)">Delete</button>
         </div>
     </div>
     }
@@ -17,10 +26,22 @@
     <div class="panel panel-default">
         <div class="panel-body">
             <p>@record.Subject</p>
-            <button class="btn btn-primary pull-right smallButton" id="@record.Id" onclick="DeleteToDo(this.id)">Delete</button>
-            <button class="btn btn-success pull-right smallButton" id="@record.Id" onclick="DoneToDo(this.id)">Done</button>
+            <button class="btn btn-primary btn-sm pull-right smallButton" id="@record.Id" onclick="DeleteToDo(this.id)">Delete</button>
+            <button class="btn btn-success btn-sm pull-right smallButton" id="@record.Id" onclick="DoneToDo(this.id)">Done</button>
         </div>
     </div>
 
     }
 }
+
+<ul class="pager">
+    @if (previousPage != 0)
+    {
+        <li><a onclick="refreshActiveTab(@previousPage)" style="cursor: pointer">Previous</a></li>
+    }
+
+    @if(nextPage <= Model.TotalPages)
+    {
+        <li><a onclick="refreshActiveTab(@nextPage)" style="cursor: pointer">Next</a></li>
+    }
+</ul>
