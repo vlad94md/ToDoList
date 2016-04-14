@@ -8,7 +8,7 @@ using ToDoList.Domain.Entities;
 
 namespace ToDoList.Domain
 {
-    public class DbToDoRepository
+    public class DbToDoRepository : IToDoRepository
     {
         DbToDoContext context = new DbToDoContext();
 

@@ -50,6 +50,7 @@
     <Compile Include="DbToDoRepository.cs" />
     <Compile Include="Entities\ToDoRecord.cs" />
     <Compile Include="Entities\User.cs" />
+    <Compile Include="IToDoRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

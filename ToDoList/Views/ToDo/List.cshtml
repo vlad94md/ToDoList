@@ -1,6 +1,7 @@
-﻿@{
+﻿@using ToDoList.Models
+@{
     Layout = null;
-    var currUser = (string)Session["username"];
+    UserModel userModel = (UserModel)Session["user"];
 }
 
 <!DOCTYPE html>
@@ -10,42 +11,12 @@
     <meta name="viewport" content="width=device-width" />
     <title>To Do App</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/flatly/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Content/ListStyles.css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-1.12.2.min.js"></script>
     <script type="text/javascript" src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/List.js"></script>
 
-    <style>
-        #toDoHeader {
-            margin: 0 auto;
-            width: 70%;
-            text-align: center;
-        }
-
-        #toDoLabel {
-            font-size: 20px;
-        }
-
-        .toDoTabs {
-            margin: 0 auto;
-            width: 70%;
-        }
-
-        .toDosContainer {
-            margin: 0 auto;
-            width: 70%;
-            white-space: normal !important;
-            word-wrap: break-word;
-        }
-
-            .toDosContainer p {
-                display: inline-block;
-                vertical-align: middle;
-            }
-
-        .smallButton {
-            margin: 3px;
-        }
-    </style>
 </head>
 <body>
     <div class="container">
@@ -58,7 +29,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#">Welcome, @currUser</a>
+                    <a class="navbar-brand" href="#">Welcome, @userModel.FirstName @userModel.LastName</a>
                 </div>
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
                     <ul class="nav navbar-nav navbar-right">
@@ -92,111 +63,12 @@
             </div>
         </div>
     </div>
+
     <script>
         $(function () {
             LoadAllToDos();
         });
-
-        function LoadAllToDos() {
-            $('#myTabContent').find("div").removeClass("activeTab");
-            $('#toDoAllList').addClass("activeTab");
-
-            $.ajax({
-                url: '@Url.Action("GetAllRecords", "ToDo")',
-                success: function (data) {
-                    $('.activeTab').html(data);
-                }
-            });
-        }
-
-        function LoadOnlyToDos() {
-            $('#myTabContent').find("div").removeClass("activeTab");
-            $('#toDoOnlyList').addClass("activeTab");
-
-            $.ajax({
-                url: '@Url.Action("GetNotFinishedRecords", "ToDo")',
-                success: function (data) {
-                    $('.activeTab').html(data);
-                }
-            });
-        }
-
-        function LoadDoneToDos() {
-            $('#myTabContent').find("div").removeClass("activeTab");
-            $('#doneOnlyList').addClass("activeTab");
-
-            $.ajax({
-                url: '@Url.Action("GetOnlyDoneRecords", "ToDo")',
-                success: function (data) {
-                    $('.activeTab').html(data);
-                }
-            });
-        }
-
-        function AddToDo() {
-            var toDoText = $("#toDoInput").val();
-            $("#toDoInput").val("");
-
-            $.ajax({
-                type: "POST",
-                url: '@Url.Action("Add", "ToDo")',
-                data: { subject: toDoText },
-                success: function (data) {
-                    refreshActiveTab();
-                }
-            });
-        }
-
-        function DeleteToDo(toDoId) {
-            $.ajax({
-                url: '@Url.Action("Delete", "ToDo")',
-                data: { id: toDoId },
-                success: function (data) {
-                    refreshActiveTab();
-                }
-            });
-        }
-
-        function DoneToDo(toDoId) {
-            $.ajax({
-                url: '@Url.Action("Done", "ToDo")',
-                data: { id: toDoId },
-                success: function (data) {
-                    refreshActiveTab();
-                }
-            });
-        }
-
-        function refreshActiveTab(data) {
-            var currentTab = $('.activeTab');
-
-            if (currentTab.attr('id') === 'toDoAllList') {
-                $.ajax({
-                    url: '@Url.Action("GetAllRecords", "ToDo")',
-                    success: function (data) {
-                        $('.activeTab').html(data);
-                    }
-                });
-            }
-            else
-                if (currentTab.attr('id') === 'toDoOnlyList') {
-                    $.ajax({
-                        url: '@Url.Action("GetNotFinishedRecords", "ToDo")',
-                        success: function (data) {
-                            $('.activeTab').html(data);
-                        }
-                    });
-                }
-                else
-                    if (currentTab.attr('id') === 'doneOnlyList') {
-                        $.ajax({
-                            url: '@Url.Action("GetOnlyDoneRecords", "ToDo")',
-                            success: function (data) {
-                                $('.activeTab').html(data);
-                            }
-                        });
-                    }
-        }
     </script>
+
 </body>
 </html>

@@ -1,0 +1,30 @@
+﻿#toDoHeader {
+    margin: 0 auto;
+    width: 70%;
+    text-align: center;
+}
+
+#toDoLabel {
+    font-size: 20px;
+}
+
+.toDoTabs {
+    margin: 0 auto;
+    width: 70%;
+}
+
+.toDosContainer {
+    margin: 0 auto;
+    width: 70%;
+    white-space: normal !important;
+    word-wrap: break-word;
+}
+
+    .toDosContainer p {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+.smallButton {
+    margin: 3px;
+}

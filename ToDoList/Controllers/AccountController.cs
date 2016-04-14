@@ -5,12 +5,18 @@ using System.Web;
 using System.Web.Mvc;
 using ToDoList.Domain;
 using ToDoList.Domain.Entities;
+using ToDoList.Models;
 
 namespace ToDoList.Controllers
 {
     public class AccountController : Controller
     {
-        private DbToDoRepository repository = new DbToDoRepository();
+        private IToDoRepository repository;
+
+        public AccountController(IToDoRepository repos)
+        {
+            repository = repos;
+        }
 
         [HttpGet]
         public ActionResult Register()
@@ -38,7 +44,13 @@ namespace ToDoList.Controllers
 
             if (currUser != null)
             {
-                System.Web.HttpContext.Current.Session["username"] = user.Username.ToString();
+                UserModel currentUser = new UserModel()
+                {
+                    Username = user.Username,
+                    FirstName = user.Username,
+                    LastName = user.LastName
+                };
+                System.Web.HttpContext.Current.Session["user"] = currentUser;
             }
 
             return RedirectToAction("List", "ToDo");

@@ -5,16 +5,22 @@ using System.Web;
 using System.Web.Mvc;
 using ToDoList.Domain;
 using ToDoList.Domain.Entities;
+using ToDoList.Models;
 
 namespace ToDoList.Controllers
 {
     public class ToDoController : Controller
     {
-        private DbToDoRepository repository = new DbToDoRepository();
+        private IToDoRepository repository;
 
-        public ActionResult List()
+        public ToDoController(IToDoRepository repos)
         {
-            if (Session["username"] == null)
+            repository = repos;
+        }
+
+        public ActionResult List(UserModel user)
+        {
+            if (user.Username == null)
             {
                 return RedirectToAction("Login", "Account");
             }
@@ -23,54 +29,54 @@ namespace ToDoList.Controllers
         }
 
         [HttpPost]
-        public void Add(string subject)
+        public void Add(UserModel user, string subject)
         {
             ToDoRecord record = new ToDoRecord();
             record.Subject = subject;
             record.IsComplete = false;
-            record.Author = (string) Session["username"];
+            record.Author = user.Username;
             record.CreatedOn = DateTime.Now;
 
             repository.AddRecord(record);
         }
 
-        public ActionResult GetAllRecords()
+        public PartialViewResult GetAllRecords(UserModel user)
         {
-            string currUser = (string) Session["username"];
+            string currUser = user.Username;
             var userRecords = repository.Records.Where(x => x.Author == currUser).OrderByDescending(x => x.CreatedOn).ToList();
 
             return PartialView("Shared/Records", userRecords);
         }
 
-        public ActionResult GetNotFinishedRecords()
+        public PartialViewResult GetNotFinishedRecords(UserModel user)
         {
-            string currUser = (string)Session["username"];
+            string currUser = user.Username;
             var userRecords = repository.Records.Where(x => x.Author == currUser && !x.IsComplete).OrderByDescending(x => x.CreatedOn).ToList();
 
             return PartialView("Shared/Records", userRecords);
         }
 
-        public ActionResult GetOnlyDoneRecords()
+        public PartialViewResult GetOnlyDoneRecords(UserModel user)
         {
-            string currUser = (string)Session["username"];
+            string currUser = user.Username;
             var userRecords = repository.Records.Where(x => x.Author == currUser && x.IsComplete).OrderByDescending(x => x.CreatedOn).ToList();
 
             return PartialView("Shared/Records", userRecords);
         }
 
-        public ActionResult Delete(string id)
+        public PartialViewResult Delete(UserModel user, string id)
         {
             repository.RemoveRecord(Guid.Parse(id));
-            string currUser = (string)Session["username"];
+            string currUser = user.Username;
             var userRecords = repository.Records.Where(x => x.Author == currUser).OrderByDescending(x=>x.CreatedOn).ToList();
 
             return PartialView("Shared/Records", userRecords);
         }
 
-        public ActionResult Done(string id)
+        public PartialViewResult Done(UserModel user, string id)
         {
             repository.MakeDoneRecord(Guid.Parse(id));
-            string currUser = (string)Session["username"];
+            string currUser = user.Username;
             var userRecords = repository.Records.Where(x => x.Author == currUser).OrderByDescending(x => x.CreatedOn).ToList();
 
             return PartialView("Shared/Records", userRecords);
